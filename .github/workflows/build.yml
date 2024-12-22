@@ -1,0 +1,41 @@
+name: Build Frontend
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Lấy mã nguồn từ repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Cài đặt Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    # Cài đặt Yarn và các phụ thuộc
+    - name: Install dependencies
+      run: |
+        npm install -g yarn
+        yarn
+
+    # Build dự án
+    - name: Build project
+      run: yarn build
+
+    # Lưu bản build vào artifacts
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-build
+        path: build/
